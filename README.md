@@ -12,3 +12,7 @@ be done:
 - [ ] Get started
 
 (If you need help using Git, [this](try.github.io) is supposedly a nice tutorial.)
+
+## Helpful resources
+
+- [Wikipedia article on numerical method we will use](https://en.wikipedia.org/wiki/Numerov%27s_method)
