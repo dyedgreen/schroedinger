@@ -6,7 +6,7 @@ be done:
 ## To Do
 - [x] Create repository
 - [ ] Add Vedin and supervisor as collaborators
-- [ ] Write summary on QM course for supervisor meeting
+- [x] Write summary on QM course for supervisor meeting
 - [ ] Meet supervisor
 - [ ] Formulate goals / road-map
 - [ ] Get started
