@@ -1,7 +1,10 @@
 # Unit tests for the numerov package
 
 import unittest
+import math
+import numpy
 import numerov
+import root
 
 class TestNumerov(unittest.TestCase):
 
@@ -21,6 +24,43 @@ class TestNumerov(unittest.TestCase):
     ]
     for i in range(10):
       self.assertEqual(numerov.step(i, i*3, lambda x: 1.0, 0, 0.1), results[i])
+
+  # Test the integration
+  def testIntegrate(self):
+    def sol(w, b, f_0, f_1, n):
+      x = numpy.linspace(0, b, n)
+      b = b / n
+      f_1 = (f_1 - f_0 * math.cos(w*b)) / math.sin(w*b)
+      return f_0 * numpy.cos(w * x) + f_1 * numpy.sin(w * x)
+    s_c = 1000
+    res = numerov.integrate(0, 1, lambda x: -4, 0, 10, step_count=s_c)
+    res -= sol(2, 10, 0, 1, s_c)
+    self.assertTrue(math.fabs(numpy.sum(res)) / s_c < 0.05)
+
+
+class TestRoot(unittest.TestCase):
+
+  # Test the root finding function
+  def testBracket(self):
+    def solve(a, b):
+      # Note, we always use the + case
+      return - a / 2 + math.sqrt(a**2 / 4 - b)
+    def bound(a, b):
+      return (-a/2, 4*a)
+    for i in range(100):
+      a = i/0.7
+      b = -3*i
+      acc = 1e-10
+      sol = root.bracket(lambda x: x*x + a*x + b, bound(a,b)[0], bound(a,b)[1], acc)
+      self.assertTrue(sol + acc >= solve(a,b) or sol - acc <= solve(a,b))
+
+  # Test the bracket finding function
+  def testExpandBrackets(self):
+    for i in range(100):
+      brack = root.expandBrackets(lambda x: x, -10**(-i), -0.9*10**(-i))
+      self.assertTrue(brack[0] <= 0 and brack[1] >= 0)
+    self.assertFalse(root.expandBrackets(lambda x: 1.0, 0., 1.))
+
 
 if __name__ == '__main__':
     unittest.main()

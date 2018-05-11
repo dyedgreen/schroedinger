@@ -18,6 +18,6 @@ be done:
 - [Wikipedia article on numerical method we will use](https://en.wikipedia.org/wiki/Numerov%27s_method)
 
 ## Research
-- [ ] Integration of ODEs (numerical recipes)
-- [ ] Numerov
+- [x] Integration of ODEs (numerical recipes)
+- [x] Numerov
 - [ ] Finite potential well

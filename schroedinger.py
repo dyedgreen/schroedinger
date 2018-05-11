@@ -2,29 +2,26 @@
 # to find energy eigenvalues for arbitrary
 # potentials.
 
+import math
 import numpy as np
 import matplotlib.pyplot as plt
 from numerov import numerov
 
 
 # Test the numerov a bit...
-def f(x): 
-  return -8.1
+s_c = 100
+y_val = numerov.integrate(0, 1, lambda x: -4, 0., 10., step_count=s_c)
+x_val = np.linspace(0, 10, s_c)
 
-for i in range(10, 100):
-  if i % 20 == 0:
-    print(i)
-    x_vals = np.linspace(0, 10, i, dtype=float)
-    y_vals = np.empty(len(x_vals), dtype=float)
+def sol(w, b, f_0, f_1, n):
+  x = np.linspace(0, b, n)
+  b = b / n
+  f_1 = (f_1 - f_0 * math.cos(w*b)) / math.sin(w*b)
+  return f_0 * np.cos(w * x) + f_1 * np.sin(w * x)
 
-    # Initial conditions
-    y_vals[0] = 0
-    y_vals[1] = 1
+plt.plot(x_val, y_val, 'r:x')
+plt.plot(x_val, sol(2, 10, 0, 1, s_c), 'b:x')
+plt.savefig('results/test.png')
 
-    for k in range(len(x_vals) - 2):
-      k += 1 # This let's us use k as the same index in the formula
-      y_vals[k+1] = numerov.step(y_vals[k], y_vals[k-1], f, x_vals[k], x_vals[1]-x_vals[0])
-
-    plt.plot(x_vals, y_vals, ['r:x', 'b:x', 'g:x', 'k:x'][i//20%4], label=str(i)+" steps")
-plt.legend()
-plt.savefig("results/test.png")
+print(np.sum(y_val - sol(2, 10, 0, 1, s_c)))
+print(np.sum(y_val - sol(2, 10, 0, 1, s_c)) / s_c)
