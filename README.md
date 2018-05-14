@@ -8,8 +8,11 @@ be done:
 - [x] Add Vedin as collaborator
 - [x] Write summary on QM course for supervisor meeting
 - [x] Meet supervisor
-- [ ] Formulate goals / road-map
-- [ ] Get started
+- [X] Formulate goals / road-map
+- [X] Get started
+- [ ] Verify that the eigenvalues function gives correct values for energy
+- [ ] Think about optimization to get more energy eigenvalues
+- [ ] Start thinking about C implementation
 
 (If you need help using Git, [this](http://try.github.io) is supposedly a nice tutorial.)
 

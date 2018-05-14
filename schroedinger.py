@@ -5,23 +5,27 @@
 import math
 import numpy as np
 import matplotlib.pyplot as plt
-from numerov import numerov
+from numerov import eigenvalues, units
 
 
-# Test the numerov a bit...
+# Find the energies for the empty well
+l = 1
 s_c = 100
-y_val = numerov.integrate(0, 1, lambda x: -4, 0., 10., step_count=s_c)
-x_val = np.linspace(0, 10, s_c)
 
-def sol(w, b, f_0, f_1, n):
-  x = np.linspace(0, b, n)
-  b = b / n
-  f_1 = (f_1 - f_0 * math.cos(w*b)) / math.sin(w*b)
-  return f_0 * np.cos(w * x) + f_1 * np.sin(w * x)
+energies = eigenvalues.energy(lambda x: 0, units.u, 0, l, 0, 0, s_c, 10)
+print(energies)
+print(units.unscale(energies[0]))
 
-plt.plot(x_val, y_val, 'r:x')
-plt.plot(x_val, sol(2, 10, 0, 1, s_c), 'b:x')
-plt.savefig('results/test.png')
+x_val = np.linspace(0, l, s_c)
+y_val = eigenvalues.psi(lambda x: 0, units.u, energies[0], 0, l, 0, s_c)
+plt.plot(x_val, y_val, 'r:', label='1st')
 
-print(np.sum(y_val - sol(2, 10, 0, 1, s_c)))
-print(np.sum(y_val - sol(2, 10, 0, 1, s_c)) / s_c)
+y_val = eigenvalues.psi(lambda x: 0, units.u, energies[1], 0, l, 0, s_c)
+plt.plot(x_val, y_val, 'c:', label='2nd')
+
+y_val = eigenvalues.psi(lambda x: 0, units.u, energies[2], 0, l, 0, s_c)
+plt.plot(x_val, y_val, 'g:', label='2nd')
+
+plt.grid(True)
+plt.legend()
+plt.savefig('results/test_energies.png')

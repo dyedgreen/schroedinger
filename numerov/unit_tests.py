@@ -5,13 +5,15 @@ import math
 import numpy
 import numerov
 import root
+import units
+import eigenvalues
 
 class TestNumerov(unittest.TestCase):
 
   # Test the integrity of the numerov step formula
   def testStep(self):
     results = [
-      0.0,
+      +0.0,
       -0.9899916597164304,
       -1.9799833194328609,
       -2.9699749791492907,
@@ -60,6 +62,28 @@ class TestRoot(unittest.TestCase):
       brack = root.expandBrackets(lambda x: x, -10**(-i), -0.9*10**(-i))
       self.assertTrue(brack[0] <= 0 and brack[1] >= 0)
     self.assertFalse(root.expandBrackets(lambda x: 1.0, 0., 1.))
+
+
+class TestUnits(unittest.TestCase):
+
+  # Test scaling and un-scaling of energies
+  def testScale(self):
+    # With standard mass
+    for i in range(0, 10000):
+      diff = units.unscale(units.scale(i * 1e-2)) - i * 1e-2
+      self.assertTrue(math.fabs(diff) < 1e-10)
+    # With custom mass
+    for i in range(0, 10000):
+      diff = units.unscale(units.scale(i * 1e-2, 1.4365), 1.4365) - i * 1e-2
+      self.assertTrue(math.fabs(diff) < 1e-10)
+
+
+class TestEigenvalues(unittest.TestCase):
+
+  # TODO
+  def testEnergy(self):
+    # TODO
+    self.assertTrue(True)
 
 
 if __name__ == '__main__':

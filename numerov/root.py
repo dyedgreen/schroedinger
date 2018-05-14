@@ -1,6 +1,5 @@
 # Root finding implementation in Python
 
-
 def bracket(f, lower, upper, accuracy=1e-10, max_iteration=1<<10):
   """Find root of function within bracket limits.
 
@@ -40,13 +39,14 @@ def bracket(f, lower, upper, accuracy=1e-10, max_iteration=1<<10):
   # Reached iteration limit
   return False
 
-def expandBrackets(f, lower, upper, step=1.1, max_iteration=1<<10):
+def expandBrackets(f, lower, upper, step=1.1, step_mod=1.0, max_iteration=1<<10):
   """Expand brackets upwards using a geometric series
-  
+
   @param f             callable (function of form f(x) = 0)
   @param lower         float    (initial guess, not varied)
   @param upper         float    (initial guess, is expanded)
   @param step          float    (used in geometric series)
+  @param step_mod      float    (used to modify the geometric series: deltaX_n = step_mod * step ** n)
   @param max_iteration int      (default 2^10)
 
   @return float or False
@@ -60,5 +60,5 @@ def expandBrackets(f, lower, upper, step=1.1, max_iteration=1<<10):
     if v_upper * v_lower < 0:
       return (lower, upper)
     else:
-      upper += step ** count
+      upper += step_mod * step ** count
   return False
