@@ -8,5 +8,5 @@ results/*
 
 # Ignore logs etc.
 *.log
-/numerov/__pycache__
+numerov/__pycache__
 .DS_Store

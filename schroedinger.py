@@ -9,22 +9,22 @@ from numerov import eigenvalues, units
 
 
 # Find the energies for the empty well
-l = 1
+l = 2e-10
+mass = 2*units.u
 s_c = 100
 
-energies = eigenvalues.energy(lambda x: 0, units.u, 0, l, 0, 0, s_c, 10)
+energies = eigenvalues.energy(lambda x: 0, mass, 0, l, 0, 0, s_c, 5)
 print(energies)
-print(units.unscale(energies[0]))
 
-x_val = np.linspace(0, l, s_c)
-y_val = eigenvalues.psi(lambda x: 0, units.u, energies[0], 0, l, 0, s_c)
-plt.plot(x_val, y_val, 'r:', label='1st')
+i = 0
+col = ['r:','g:','b:','c:','k:']
+for en in energies:
+  i += 1
+  x_val = np.linspace(0, l, s_c)
+  y_val = eigenvalues.psi(lambda x: 0, mass, en, 0, l, 0, s_c)
+  plt.plot(x_val, y_val, col[(i - 1) % len(col)], label=str(i))
 
-y_val = eigenvalues.psi(lambda x: 0, units.u, energies[1], 0, l, 0, s_c)
-plt.plot(x_val, y_val, 'c:', label='2nd')
-
-y_val = eigenvalues.psi(lambda x: 0, units.u, energies[2], 0, l, 0, s_c)
-plt.plot(x_val, y_val, 'g:', label='2nd')
+  print(units.unscaleE(energies[i-1]), i**2 * units.h**2 / 8 / mass / l**2)
 
 plt.grid(True)
 plt.legend()

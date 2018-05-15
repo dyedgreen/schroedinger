@@ -70,11 +70,19 @@ class TestUnits(unittest.TestCase):
   def testScale(self):
     # With standard mass
     for i in range(0, 10000):
-      diff = units.unscale(units.scale(i * 1e-2)) - i * 1e-2
+      # Energy
+      diff = units.unscaleE(units.scaleE(i * 1e-2)) - i * 1e-2
+      self.assertTrue(math.fabs(diff) < 1e-10)
+      # Length
+      diff = units.unscaleL(units.scaleL(i * 1e-2)) - i * 1e-2
       self.assertTrue(math.fabs(diff) < 1e-10)
     # With custom mass
     for i in range(0, 10000):
-      diff = units.unscale(units.scale(i * 1e-2, 1.4365), 1.4365) - i * 1e-2
+      # Energy
+      diff = units.unscaleE(units.scaleE(i * 1e-2, 1.4365), 1.4365) - i * 1e-2
+      self.assertTrue(math.fabs(diff) < 1e-10)
+      # Length
+      diff = units.unscaleL(units.scaleL(i * 1e-2, 1.4365), 1.4365) - i * 1e-2
       self.assertTrue(math.fabs(diff) < 1e-10)
 
 

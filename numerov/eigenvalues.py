@@ -25,10 +25,14 @@ def energy(f, m, x_start, x_end, y_start, y_end, step_count=1000, max_iterations
 
   @return list of float (energy eigenvalues in scaled units)
   """
+  # Scale units
+  x_start = units.scaleL(x_start, m)
+  x_end = units.scaleL(x_end, m)
+  # These will be in scaled units
   energies = []
   def f_n(E):
     # Callable for numerov at given energy
-    return lambda x: units.scale(f(x), m) - E
+    return lambda x: units.scaleE(f(units.unscaleL(x)), m) - E
   def f_r(E):
     # Callable for root
     y_vals = numerov.integrate(y_start, 1.0, f_n(E), x_start, x_end, step_count)
@@ -61,4 +65,8 @@ def psi(f, m, E, x_start, x_end, y_start, step_count=1000):
 
   @return list of float (values of psi, not normalized)
   """
-  return numerov.integrate(y_start, 1.0, lambda x: units.scale(f(x), m) - E, x_start, x_end, step_count)
+  # Scale units
+  x_start = units.scaleL(x_start, m)
+  x_end = units.scaleL(x_end, m)
+  # Perform integration
+  return numerov.integrate(y_start, 1.0, lambda x: units.scaleE(f(units.unscaleL(x)), m) - E, x_start, x_end, step_count)
