@@ -11,7 +11,7 @@ be done:
 - [x] Formulate goals / road-map
 - [x] Get started
 - [x] Verify that the eigenvalues function gives correct values for energy
-- [ ] Get double the energy -> investigate...
+- [ ] Get half the energy -> investigate...
 - [ ] Test on less trivial examples
 - [x] Think about optimization to get more energy eigenvalues (current scaling gives lots of values)
 - [ ] Start thinking about C implementation

@@ -9,6 +9,7 @@ else:
   import numerov
   import root
   import units
+import numpy as np
 
 def energy(f, m, x_start, x_end, y_start, y_end, step_count=1000, max_iterations=1000):
   """Find numeric solutions to the energy eigenvalues
@@ -26,17 +27,21 @@ def energy(f, m, x_start, x_end, y_start, y_end, step_count=1000, max_iterations
   @return list of float (energy eigenvalues in scaled units)
   """
   # Scale units
-  x_start = units.scaleL(x_start, m)
-  x_end = units.scaleL(x_end, m)
+  #x_start = units.scaleL(x_start, m)
+  #x_end = units.scaleL(x_end, m)
+  half_width = units.scaleL(x_end - x_start) / 2
   # These will be in scaled units
   energies = []
-  def f_n(E):
+  def f_n(E, back=False):
     # Callable for numerov at given energy
-    return lambda x: units.scaleE(f(units.unscaleL(x)), m) - E
+    if back:
+      return lambda x: units.scaleE(f(x_end - units.unscaleL(x)), m) - E
+    return lambda x: units.scaleE(f(x_start + units.unscaleL(x)), m) - E
   def f_r(E):
-    # Callable for root
-    y_vals = numerov.integrate(y_start, 1.0, f_n(E), x_start, x_end, step_count)
-    return y_vals[len(y_vals)-1] - y_end
+    # Callable for root (FIXME: Better offset managing)
+    y_vals_f = numerov.integrate(y_start, 1.0, f_n(E), 0.0, half_width, step_count//2+5)
+    y_vals_b = numerov.integrate(y_end, 1.0, f_n(E, True), 0.0, half_width, step_count//2-5)
+    return y_vals_f[len(y_vals_f)-1] - y_vals_b[len(y_vals_b)-1]
   # Find energies using the root / shooting method
   bounds = (0,0)
   i = 0
@@ -52,21 +57,30 @@ def energy(f, m, x_start, x_end, y_start, y_end, step_count=1000, max_iterations
       energies.append(energy)
   return energies
 
-def psi(f, m, E, x_start, x_end, y_start, step_count=1000):
+def psi(f, m, E, x_start, x_end, y_start, y_end, step_count=1000):
   """Find the plot for Psi for a given energy
   
   @param f              callable (potential function in Joules)
   @param m              float    (mass of particle in kg)
-  @param E              float    (energy eigenvalue to plot)
+  @param E              float    (scaled energy eigenvalue to plot)
   @param x_start        float    (start of integration range)
   @param x_end          float
   @param y_start        float    (boundary condition on x_start)
+  @param y_end          float
   @param step_count     int      (steps in numerov integration)
 
   @return list of float (values of psi, not normalized)
   """
   # Scale units
-  x_start = units.scaleL(x_start, m)
-  x_end = units.scaleL(x_end, m)
+  #x_start = units.scaleL(x_start, m)
+  #x_end = units.scaleL(x_end, m)
+  half_width = units.scaleL(x_end - x_start) / 2
   # Perform integration
-  return numerov.integrate(y_start, 1.0, lambda x: units.scaleE(f(units.unscaleL(x)), m) - E, x_start, x_end, step_count)
+  def f_n(E, back=False):
+    # Callable for numerov at given energy
+    if back:
+      return lambda x: units.scaleE(f(x_end - units.unscaleL(x)), m) - E
+    return lambda x: units.scaleE(f(x_start + units.unscaleL(x)), m) - E
+  y_vals_f = numerov.integrate(y_start, 1.0, f_n(E), 0.0, half_width, step_count//2)
+  y_vals_b = numerov.integrate(y_end, 1.0, f_n(E, True), 0.0, half_width, step_count//2)
+  return np.concatenate([y_vals_f, np.flip(y_vals_b,0)])

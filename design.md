@@ -41,3 +41,10 @@ where we scale the length unit (meters) to achieve this nice form.
 Note: This allows us to rewrite the ODE as `Y'' = (f(x)-E) * Y`
 Note: For systems substantially bigger than atoms, this scaling makes
       energies to small to be detected
+
+## Energy values for inf square well to small
+Multiplying by `2.4` gives pretty exact energies for *ALL* energies computed,
+which probably means, that we're missing a constant factor of about that somewhere.
+
+## Coming from both sides
+-> Check sign of integration
