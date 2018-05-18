@@ -50,3 +50,9 @@ which probably means, that we're missing a constant factor of about that somewhe
 ## Coming from both sides
 -> Check sign of integration
 -> Note, use identity of derivatives
+
+## Note on normalization
+-> Using adaptive normalization to a max of 10.0, the
+   integration is (at least number-range wise) very resilient
+   -> Use this to build integrator for symmetric problems using
+      gradient condition!
