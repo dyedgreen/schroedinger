@@ -27,8 +27,6 @@ def energy(f, m, x_start, x_end, y_start, y_end, step_count=1000, max_iterations
   @return list of float (energy eigenvalues in scaled units)
   """
   # Scale units
-  #x_start = units.scaleL(x_start, m)
-  #x_end = units.scaleL(x_end, m)
   half_width = units.scaleL(x_end - x_start) / 2
   # These will be in scaled units
   energies = []
@@ -38,10 +36,12 @@ def energy(f, m, x_start, x_end, y_start, y_end, step_count=1000, max_iterations
       return lambda x: units.scaleE(f(x_end - units.unscaleL(x)), m) - E
     return lambda x: units.scaleE(f(x_start + units.unscaleL(x)), m) - E
   def f_r(E):
-    # Callable for root (FIXME: Better offset managing)
-    y_vals_f = numerov.integrate(y_start, 1.0, f_n(E), 0.0, half_width, step_count//2+5)
-    y_vals_b = numerov.integrate(y_end, 1.0, f_n(E, True), 0.0, half_width, step_count//2-5)
-    return y_vals_f[len(y_vals_f)-1] - y_vals_b[len(y_vals_b)-1]
+    # Callable for root
+    y_vals_f = numerov.integrate(y_start, 1.0, f_n(E), 0.0, half_width, step_count//2+1)
+    y_vals_b = numerov.integrate(y_end, 1.0, f_n(E, True), 0.0, half_width, step_count//2+1)
+    d_f = (y_vals_f[len(y_vals_f)-1] - y_vals_f[len(y_vals_f)-2]) * step_count / units.scaleL(x_end - x_start)
+    d_b = (y_vals_f[len(y_vals_f)-2] - y_vals_f[len(y_vals_f)-1]) * step_count / units.scaleL(x_end - x_start)
+    return d_f - d_b
   # Find energies using the root / shooting method
   bounds = (0,0)
   i = 0
@@ -72,8 +72,6 @@ def psi(f, m, E, x_start, x_end, y_start, y_end, step_count=1000):
   @return list of float (values of psi, not normalized)
   """
   # Scale units
-  #x_start = units.scaleL(x_start, m)
-  #x_end = units.scaleL(x_end, m)
   half_width = units.scaleL(x_end - x_start) / 2
   # Perform integration
   def f_n(E, back=False):

@@ -45,6 +45,8 @@ Note: For systems substantially bigger than atoms, this scaling makes
 ## Energy values for inf square well to small
 Multiplying by `2.4` gives pretty exact energies for *ALL* energies computed,
 which probably means, that we're missing a constant factor of about that somewhere.
+-> Now: 1 order of magnitude to small, but 2.4 factor gives correct digits
 
 ## Coming from both sides
 -> Check sign of integration
+-> Note, use identity of derivatives

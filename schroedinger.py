@@ -9,9 +9,9 @@ from numerov import eigenvalues, units
 
 
 # Find the energies for the empty well
-l = 5e-10
+l = 2e-10
 mass = 2*units.u
-s_c = 100
+s_c = 200
 
 def pot(x):
   if x > -2e-10 and x < 2e-10:
@@ -19,7 +19,7 @@ def pot(x):
   return 14.0 * 1.6e-19
 
 
-energies = eigenvalues.energy(pot, mass, -l, l, 0, 0, s_c, 5)
+energies = eigenvalues.energy(pot, mass, -l, l, 0.1, 0.1, s_c, 10)
 print(energies)
 
 i = 0
