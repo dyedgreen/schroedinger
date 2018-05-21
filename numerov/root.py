@@ -59,6 +59,31 @@ def expandBrackets(f, lower, upper, step=1.1, step_mod=1.0, max_iteration=1<<10)
     v_upper = f(upper)
     if v_upper * v_lower < 0:
       return (lower, upper)
-    else:
+    elif count < 1e3:
       upper += step_mod * step ** count
+    else:
+      upper += step_mod * step ** 1e3
+  return False
+
+def expandBracketsLin(f, lower, upper, step=1.1, max_iteration=1<<10):
+  """Expand brackets upwards using an arithmetic series
+
+  @param f             callable (function of form f(x) = 0)
+  @param lower         float    (initial guess, not varied)
+  @param upper         float    (initial guess, is expanded)
+  @param step          float    (used in arithmetic series)
+  @param max_iteration int      (default 2^10)
+
+  @return float or False
+  """
+  v_upper = 0.
+  v_lower = f(lower)
+  count = 0
+  while count < max_iteration:
+    count += 1
+    v_upper = f(upper)
+    if v_upper * v_lower < 0:
+      return (lower, upper)
+    else:
+      upper += step
   return False

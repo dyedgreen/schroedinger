@@ -56,3 +56,6 @@ which probably means, that we're missing a constant factor of about that somewhe
    integration is (at least number-range wise) very resilient
    -> Use this to build integrator for symmetric problems using
       gradient condition!
+
+## Note
+Look at perturbation theory
