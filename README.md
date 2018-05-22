@@ -11,10 +11,11 @@ be done:
 - [x] Formulate goals / road-map
 - [x] Get started
 - [x] Verify that the eigenvalues function gives correct values for energy
-- [ ] Get half the energy -> investigate...
+- [x] Get half the energy -> investigate... (discontinuity in inf. case)
 - [ ] Test on less trivial examples
 - [x] Think about optimization to get more energy eigenvalues (current scaling gives lots of values)
 - [ ] Start thinking about C implementation
+- [ ] Add more fine-grained control over root / bracket expanding functions (i.e. give option to user-supply them)
 
 (If you need help using Git, [this](http://try.github.io) is supposedly a nice tutorial.)
 

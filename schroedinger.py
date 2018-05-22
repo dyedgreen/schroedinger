@@ -21,8 +21,8 @@ def pot(x):
   if x > -2e-10 and x < 2e-10:
     return 0.0
   elif x >= 2e-10:
-    return 10.0 * 1.6e-19
-  return 14.0 * 1.6e-19
+    return 20.0e-3 * 1.6e-19
+  return 24.0e-3 * 1.6e-19
 
 
 energies = eigenvalues.energy(pot, mass, -l, l, initial, initial, s_c, 5)
