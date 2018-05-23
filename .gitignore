@@ -6,6 +6,11 @@ results/*
 *.aux
 *.pdf
 
+# Ignore extension builds
+numerov_c/build
+numerov_c/build/*
+*.so
+
 # Ignore logs etc.
 *.log
 numerov/__pycache__
