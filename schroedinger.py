@@ -24,13 +24,13 @@ def pot(x):
     return 0.0
   #elif x >= 2e-10:
   #  return 20.0e-3 * 1.6e-19
-  return 14.0e-4 * 1.6e-19
+  return 14.0e-3 * 1.6e-19
 
 
-energies = eigenvalues.energy(pot, mass, -l, l, initial, initial, s_c, 5)
+#energies = eigenvalues.energy(pot, mass, -l, l, initial, initial, s_c, 5)
+#print(energies)
+energies = num_c.energy(pot, mass, -l, l, initial, initial, s_c, 5)
 print(energies)
-energies_c = num_c.energy(pot, mass, -l, l, initial, initial, s_c, 5)
-print(energies_c)
 
 correction = (units.h**2 / 8 / mass / (l*2)**2) / units.unscaleE(energies[0], mass)
 print(correction)
@@ -51,14 +51,14 @@ for en in energies:
 
   x_val = np.linspace(-l_print, l_print, s_c)
   y_val = eigenvalues.psi(pot, mass, en, -l_print, l_print, initial, initial, s_c)
-  y_val_c = eigenvalues.psi(pot, mass, energies_c[i], -l_print, l_print, initial, initial, s_c)
+  #y_val_c = eigenvalues.psi(pot, mass, energies_c[i], -l_print, l_print, initial, initial, s_c)
   plt.plot(x_val, y_val, col[(i) % len(col)], label=str(i))
-  plt.plot(x_val, y_val_c, col_c[(i) % len(col_c)], label="c " + str(i))
+  #plt.plot(x_val, y_val_c, col_c[(i) % len(col_c)], label="c " + str(i))
 
   print(
     "[" +str(i)+ "]",
     units.unscaleE(energies[i], mass) * correction,
-    units.unscaleE(energies_c[i], mass) * correction,
+    #units.unscaleE(energies_c[i], mass) * correction,
     (i+1)**2 * units.h**2 / 8 / mass / (l*2)**2,
     units.unscaleE(energies[i], mass) * correction - (i+1)**2 * units.h**2 / 8 / mass / (l*2)**2
   )

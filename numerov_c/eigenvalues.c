@@ -3,6 +3,8 @@
 #define MASS_L 12l*UNITS_U // Mass for length scaling
 #define INT_SHORTHAND(E) integrate(E, f, &m, &x_start, &x_end, &y_start, &y_end, &step_count, &step_width, &norm)
 
+#define BRACKET_THRESHOLD 1e-10l
+
 #define ROOT_STEP 1e-3l
 #define ROOT_ACCURACY 1e-10l
 #define ROOT_MAX_ITERATIONS 1<<10
@@ -22,6 +24,7 @@ double callPythonPotential(PyObject *f, double x) {
 
 // Integration function needed by the numerov
 // Why this horrid function that gets passed the local variables? Because I need the procedure twice.
+// NOTE: This is called using the above macro INT_SHORTHAND
 double integrate(double E, PyObject *f, double *m, double *x_start, double *x_end, double *y_start, double *y_end, int *step_count, double *step_width, double *norm) {
   // k / kk def as in step fn
   double psi_k_f, psi_kk_f, psi_k_b, psi_kk_b, psi_temp, psi_max, x;
@@ -87,8 +90,7 @@ PyObject *eigenvalues_energy(
     max_iterations = 1<<2;
   }
   // Determine constant values
-  double half_length = units_scaleL(x_end-x_start, MASS_L);
-  double step_width = 2l * half_length / (double)step_count;
+  double step_width = units_scaleL(x_end-x_start, MASS_L) / (double)step_count;
 
   // Variables for the Numerov function
   double norm = 1l;
@@ -99,7 +101,7 @@ PyObject *eigenvalues_energy(
   if (energies_list == NULL) {
     return PyErr_NoMemory();
   }
-  double lower = 0l, upper = 0l, energy_res;
+  double lower, upper = 0l, energy_res;
   double v_upper, v_lower, midpoint;
   int root_success;
 
@@ -109,7 +111,7 @@ PyObject *eigenvalues_energy(
   for (int i_energy = 0; i_energy < max_iterations; i_energy ++) {
     // Set new bounds
     lower = upper;
-    upper += 1e-10l;
+    upper += BRACKET_THRESHOLD;
     // Expand energy brackets
     v_lower = INT_SHORTHAND(lower);
     root_success = 0;
@@ -144,11 +146,12 @@ PyObject *eigenvalues_energy(
         energy_res = lower + (upper-lower) / 2l;
       }
     }
-    if (!root_success) {
+    if (!root_success || energy_res < BRACKET_THRESHOLD) {
+      // Discard if no solution is found / energy is below threshold (ie E=0)
       continue;
     }
     // Store energy
-    // Reference need not be decreased, since we pass on the values
+    // NOTE: Reference need not be decreased, since we pass on the values
     PyObject* energy_py = Py_BuildValue("d", energy_res);
     if (energy_py != NULL) {
       PyList_Append(energies_list, energy_py);
