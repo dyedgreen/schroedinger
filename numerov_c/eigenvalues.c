@@ -56,18 +56,15 @@ double integrate(double E, PyObject *f, double *m, double *x_start, double *x_en
       *step_width
     );
     psi_kk_b = psi_temp;
-    // Keep max for normalization
+    // Keep max for normalization (just from first one for convenience, since backwards is scaled after)
     if (fabs(psi_k_f) > psi_max) {
       psi_max = fabs(psi_k_f);
-    }
-    if (fabs(psi_k_b) > psi_max) {
-      psi_max = fabs(psi_k_b);
     }
   }
   // Adjust normalization
   *norm = 10l * *norm / psi_max;
-  // Return difference in derivatives
-  return (psi_k_f - psi_kk_f + psi_k_b - psi_kk_b) / *step_width;
+  // Return difference in derivatives (and match backwards to be continuous)
+  return (psi_k_f - psi_kk_f + (psi_k_b - psi_kk_b) * psi_k_f / psi_k_b) / *step_width;
 }
 
 // Find energy eigenvalues (returns python list)
