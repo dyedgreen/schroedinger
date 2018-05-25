@@ -10,12 +10,12 @@ u = 1.660539040e-27 # Atomic mass unit
 e = 1.6021766208e-19 # Fundamental charge 
 
 # We have gamma and gamma squared, as sqrt looses precision
-def gammaSquared(m=12*u):
+def gammaSquared(m):
   return math.sqrt(8 * pi**2 * m / h**2)
-def gamma(m=12*u):
+def gamma(m):
   return math.sqrt(gammaSquared(m))
 
-def scaleE(E, m=12*u):
+def scaleE(E, m):
   """Scale an energy value into a nice range
 
   @param E float (energy value in Joules)
@@ -25,7 +25,7 @@ def scaleE(E, m=12*u):
   """
   return E * gammaSquared(m)
 
-def unscaleE(E, m=12*u):
+def unscaleE(E, m):
   """Retrieve the energy value in Joules
 
   @param E float (energy value in scaled units)
@@ -35,7 +35,7 @@ def unscaleE(E, m=12*u):
   """
   return E / gammaSquared(m)
 
-def scaleL(L, m=12*u):
+def scaleL(L, m):
   """Scale a length value into a nice range
 
   @param L float (length value in meters)
@@ -45,7 +45,7 @@ def scaleL(L, m=12*u):
   """
   return L * gamma(m)
 
-def unscaleL(L, m=12*u):
+def unscaleL(L, m):
   """Retrieve the length value in meters
 
   @param L float (length value in scaled units)

@@ -31,13 +31,13 @@ def energy(f, m, x_start, x_end, y_start, y_end, step_count=1000, max_iterations
   @return [float] (energy eigenvalues in scaled units)
   """
   # Find constant values
-  half_length = units.scaleL(x_end-x_start) / 2
+  half_length = units.scaleL(x_end-x_start, m) / 2
   energies = []
   norm = 1.0
   def f_n(E, back=False):
     if back:
-      return lambda x: units.scaleE(f(x_end - units.unscaleL(x)), m) - E
-    return lambda x: units.scaleE(f(x_start + units.unscaleL(x)), m) - E
+      return lambda x: units.scaleE(f(x_end - units.unscaleL(x, m)), m) - E
+    return lambda x: units.scaleE(f(x_start + units.unscaleL(x, m)), m) - E
   def f_r(E, back=False):
     nonlocal norm
     # Perform Numerov integration
@@ -59,7 +59,7 @@ def energy(f, m, x_start, x_end, y_start, y_end, step_count=1000, max_iterations
     i += 1
     bounds = (bounds[1], bounds[1]+1e-10)
     # Note: Think about better / more intelligent step sizes vs how many steps needed
-    bounds = root.expandBrackets(f_r, bounds[0], bounds[1], 1.+1e-3, 1e-4, 1<<15)
+    bounds = root.expandBrackets(f_r, bounds[0], bounds[1], 1.+1e-3, 1e-1, 1<<15)
     if bounds == False:
       break
     energy = root.bracket(f_r, bounds[0], bounds[1])
@@ -82,12 +82,12 @@ def psi(f, m, E, x_start, x_end, y_start, y_end, step_count=1000):
   @return list of float (values of psi, not normalized)
   """
   # Find constant values
-  half_length = units.scaleL(x_end-x_start) / 2
+  half_length = units.scaleL(x_end-x_start, m) / 2
   energies = []
   def f_n(E, back=False):
     if back:
-      return lambda x: units.scaleE(f(x_end - units.unscaleL(x)), m) - E
-    return lambda x: units.scaleE(f(x_start + units.unscaleL(x)), m) - E
+      return lambda x: units.scaleE(f(x_end - units.unscaleL(x, m)), m) - E
+    return lambda x: units.scaleE(f(x_start + units.unscaleL(x, m)), m) - E
   # Perform Numerov integration
   y_vals_f = numerov.integrate(y_start, 1.0, f_n(E, True), 0, half_length, step_count=step_count//2)
   y_vals_b = numerov.integrate(y_start, 1.0, f_n(E, False), 0, half_length, step_count=step_count//2)

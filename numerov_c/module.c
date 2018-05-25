@@ -38,7 +38,7 @@ PyMODINIT_FUNC PyInit_numerov_c(void) {
 // Energy wrapper
 static PyObject *energy_numerov_c(PyObject *self, PyObject *args) {
   // Get the function inputs
-  PyObject *f = NULL;
+  PyObject *f = NULL; // No need to decref, since this is a function
   double m, x_start, x_end, y_start, y_end;
   int step_count, max_iterations;
   PyArg_ParseTuple(args, "Odddddii",

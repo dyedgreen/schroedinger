@@ -1,11 +1,10 @@
 #import "eigenvalues.h"
 
-#define MASS_L 12l*UNITS_U // Mass for length scaling
 #define INT_SHORTHAND(E) integrate(E, f, &m, &x_start, &x_end, &y_start, &y_end, &step_count, &step_width, &norm)
 
 #define BRACKET_THRESHOLD 1e-10l
 
-#define ROOT_STEP 1e-3l
+#define ROOT_STEP 1e-1
 #define ROOT_ACCURACY 1e-10l
 #define ROOT_MAX_ITERATIONS 1<<10
 
@@ -42,9 +41,9 @@ double integrate(double E, PyObject *f, double *m, double *x_start, double *x_en
     psi_k_f = numerov_step(
       psi_k_f,
       psi_kk_f,
-      units_scaleE(callPythonPotential(f, *x_start + units_unscaleL(x - *step_width, MASS_L)), *m) - E,
-      units_scaleE(callPythonPotential(f, *x_start + units_unscaleL(x, MASS_L)), *m) - E,
-      units_scaleE(callPythonPotential(f, *x_start + units_unscaleL(x + *step_width, MASS_L)), *m) - E,
+      units_scaleE(callPythonPotential(f, *x_start + units_unscaleL(x - *step_width, *m)), *m) - E,
+      units_scaleE(callPythonPotential(f, *x_start + units_unscaleL(x, *m)), *m) - E,
+      units_scaleE(callPythonPotential(f, *x_start + units_unscaleL(x + *step_width, *m)), *m) - E,
       *step_width
     );
     psi_kk_f = psi_temp;
@@ -53,9 +52,9 @@ double integrate(double E, PyObject *f, double *m, double *x_start, double *x_en
     psi_k_b = numerov_step(
       psi_k_b,
       psi_kk_b,
-      units_scaleE(callPythonPotential(f, *x_end - units_unscaleL(x - *step_width, MASS_L)), *m) - E,
-      units_scaleE(callPythonPotential(f, *x_end - units_unscaleL(x, MASS_L)), *m) - E,
-      units_scaleE(callPythonPotential(f, *x_end - units_unscaleL(x + *step_width, MASS_L)), *m) - E,
+      units_scaleE(callPythonPotential(f, *x_end - units_unscaleL(x - *step_width, *m)), *m) - E,
+      units_scaleE(callPythonPotential(f, *x_end - units_unscaleL(x, *m)), *m) - E,
+      units_scaleE(callPythonPotential(f, *x_end - units_unscaleL(x + *step_width, *m)), *m) - E,
       *step_width
     );
     psi_kk_b = psi_temp;
@@ -90,7 +89,7 @@ PyObject *eigenvalues_energy(
     max_iterations = 1<<2;
   }
   // Determine constant values
-  double step_width = units_scaleL(x_end-x_start, MASS_L) / (double)step_count;
+  double step_width = units_scaleL(x_end-x_start, m) / (double)step_count;
 
   // Variables for the Numerov function
   double norm = 1l;
@@ -148,6 +147,10 @@ PyObject *eigenvalues_energy(
     }
     if (!root_success || energy_res < BRACKET_THRESHOLD) {
       // Discard if no solution is found / energy is below threshold (ie E=0)
+      if (root_success && energy_res < BRACKET_THRESHOLD) {
+        // Do an extra one to better reflect argument description
+        max_iterations += 1;
+      }
       continue;
     }
     // Store energy

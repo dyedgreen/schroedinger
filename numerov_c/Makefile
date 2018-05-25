@@ -1,10 +1,16 @@
 # Makefile for numerov_c extension
 
-RESULTS = $(wildcard *.so)
+RESULTS=$(wildcard *.so)
+CANUSETHREE=$(shell python3 --version 2>/dev/null)
+PY=python3
+
+ifeq (CANUSETHREE,)
+	PY=python
+endif
 
 build: clean
 build:
-	python3 setup.py build_ext --inplace
+	$(PY) setup.py build_ext --inplace
 
 install: build
 install:
