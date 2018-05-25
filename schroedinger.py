@@ -19,22 +19,16 @@ s_c = 500
 initial = 0.1
 
 def pot(x):
-  #return 0.;
-  #return np.sin(x*5e10) * 8.0e-20
-  #if x > -2e-10 and x < -1e-10:
-  #  return np.sin(x*5e10) * 14.0e-3 * 1.6e-19
-  if x > -2e-10 and x < 2e-10:
-    return 0.0
-  #elif x >= 2e-10:
-  #  return 20.0e-3 * 1.6e-19
-  return 14.0 * 1.6e-19
+  if (np.abs(x * 1e10) >= units.pi):
+    return 14. * 1.6e-19
+  return -np.cos(x * 1e10) * 14. * 1.6e-19
 
 
 
 
 #energies = eigenvalues.energy(pot, mass, -l, l, initial, initial, s_c, 5)
 #print(energies)
-energies = num_c.energy(pot, mass, -l, l, initial, initial, s_c, 10)
+energies = num_c.energy(pot, mass, -l, l, initial, initial, s_c, 3)
 print(energies)
 
 #correction = (units.h**2 / 8 / mass / (l_inf)**2) / units.unscaleE(energies[0], mass)

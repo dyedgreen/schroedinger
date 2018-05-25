@@ -2,7 +2,7 @@
 
 #define INT_SHORTHAND(E) integrate(E, f, &m, &x_start, &x_end, &y_start, &y_end, &step_count, &step_width, &norm)
 
-#define BRACKET_THRESHOLD 1e-10l
+#define BRACKET_THRESHOLD 1e-3l
 
 #define ROOT_STEP 1e-1
 #define ROOT_ACCURACY 1e-10l
