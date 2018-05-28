@@ -15,9 +15,6 @@ import math
 def energy(f, m, x_start, x_end, y_start, y_end, step_count=1000, max_iterations=1000):
   """Find numeric solutions to the energy eigenvalues
      of a given system.
-     NOTE: Regarding unit scaling, we scale lengths with
-     the standard mass (12u), while energies HAVE to be
-     scaled using the particles mass m.
   
   @param f              callable (potential function in Joules)
   @param m              float    (mass of particle in kg)
@@ -38,11 +35,11 @@ def energy(f, m, x_start, x_end, y_start, y_end, step_count=1000, max_iterations
     if back:
       return lambda x: units.scaleE(f(x_end - units.unscaleL(x, m)), m) - E
     return lambda x: units.scaleE(f(x_start + units.unscaleL(x, m)), m) - E
-  def f_r(E, back=False):
+  def f_r(E):
     nonlocal norm
     # Perform Numerov integration
-    y_vals_f = numerov.integrate(y_start, norm, f_n(E, True), 0, half_length, step_count=step_count//2)
-    y_vals_b = numerov.integrate(y_start, norm, f_n(E, False), 0, half_length, step_count=step_count//2)
+    y_vals_f = numerov.integrate(y_start, norm, f_n(E, False), 0, half_length, step_count=step_count//2)
+    y_vals_b = numerov.integrate(y_start, norm, f_n(E, True), 0, half_length, step_count=step_count//2)
     # Make continuous
     cont_factor = y_vals_f[len(y_vals_f)-1] / y_vals_b[len(y_vals_b)-1]
     # Compute derivatives
@@ -56,7 +53,6 @@ def energy(f, m, x_start, x_end, y_start, y_end, step_count=1000, max_iterations
   i = 0
   while bounds != False and i < max_iterations:
     print("Iteration " + str(i))
-    i += 1
     bounds = (bounds[1], bounds[1]+1e-10)
     # Note: Think about better / more intelligent step sizes vs how many steps needed
     bounds = root.expandBrackets(f_r, bounds[0], bounds[1], 1.+1e-3, 1e-1, 1<<15)
@@ -65,6 +61,10 @@ def energy(f, m, x_start, x_end, y_start, y_end, step_count=1000, max_iterations
     energy = root.bracket(f_r, bounds[0], bounds[1])
     if energy != False:
       energies.append(energy)
+    elif i == 0:
+      # If this is the first, add one to match c implementation
+      max_iterations += 1
+    i += 1
   return energies
 
 def psi(f, m, E, x_start, x_end, y_start, y_end, step_count=1000):
@@ -89,8 +89,8 @@ def psi(f, m, E, x_start, x_end, y_start, y_end, step_count=1000):
       return lambda x: units.scaleE(f(x_end - units.unscaleL(x, m)), m) - E
     return lambda x: units.scaleE(f(x_start + units.unscaleL(x, m)), m) - E
   # Perform Numerov integration
-  y_vals_f = numerov.integrate(y_start, 1.0, f_n(E, True), 0, half_length, step_count=step_count//2)
-  y_vals_b = numerov.integrate(y_start, 1.0, f_n(E, False), 0, half_length, step_count=step_count//2)
+  y_vals_f = numerov.integrate(y_start, 1.0, f_n(E, False), 0, half_length, step_count=step_count//2)
+  y_vals_b = numerov.integrate(y_end, 1.0, f_n(E, True), 0, half_length, step_count=step_count//2)
   # Make continuous
   y_vals_b *= y_vals_f[len(y_vals_f)-1] / y_vals_b[len(y_vals_b)-1]
   # Return normalized result

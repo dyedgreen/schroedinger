@@ -8,6 +8,7 @@ h = 6.626070040e-34 # Planck's Constant according to NIST
 pi = 3.14159265358979
 u = 1.660539040e-27 # Atomic mass unit
 e = 1.6021766208e-19 # Fundamental charge 
+me = 9.10938356e-31 # Mass of the electron
 
 # We have gamma and gamma squared, as sqrt looses precision
 def gammaSquared(m):

@@ -68,14 +68,6 @@ class TestUnits(unittest.TestCase):
 
   # Test scaling and un-scaling of energies
   def testScale(self):
-    # With standard mass
-    for i in range(0, 10000):
-      # Energy
-      diff = units.unscaleE(units.scaleE(i * 1e-2)) - i * 1e-2
-      self.assertTrue(math.fabs(diff) < 1e-10)
-      # Length
-      diff = units.unscaleL(units.scaleL(i * 1e-2)) - i * 1e-2
-      self.assertTrue(math.fabs(diff) < 1e-10)
     # With custom mass
     for i in range(0, 10000):
       # Energy
@@ -88,10 +80,19 @@ class TestUnits(unittest.TestCase):
 
 class TestEigenvalues(unittest.TestCase):
 
-  # TODO
   def testEnergy(self):
-    # TODO
-    self.assertTrue(True)
+    # 4nm finite 14eV well
+    results = [1.47, 5.74, 12.] # in eV
+    def potTest(x):
+      # shifted to avoid only getting odd states (ie avoid symmetries)
+      if x > -5e-10 and x < -1e-10:
+        return 0.0
+      return 14.0 * units.e
+    energies = eigenvalues.energy(potTest, units.me, -2e-9, 2e-9, .1, .1, 1000, 3)
+    error = 0.
+    for i in range(len(energies)):
+      error += (units.unscaleE(energies[i], units.me) / units.e - results[i])**2
+    self.assertTrue(error < 0.01)
 
 
 if __name__ == '__main__':

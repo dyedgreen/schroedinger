@@ -1,5 +1,8 @@
 # Algorithm design choices
 
+**Note**: This document was a made iteratively during development and needs to be updated / made more
+readable to not-me people.
+
 -> Goal, given a potential function, we want to find the energy eigenvalues
 
 ## Numerov

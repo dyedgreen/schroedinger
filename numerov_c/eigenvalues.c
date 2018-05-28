@@ -4,6 +4,7 @@
 
 #define BRACKET_THRESHOLD 1e-3l
 
+#define ROOT_GEOM (1l+1e-3l)
 #define ROOT_STEP 1e-1
 #define ROOT_ACCURACY 1e-10l
 #define ROOT_MAX_ITERATIONS 1<<10
@@ -120,7 +121,7 @@ PyObject *eigenvalues_energy(
         root_success = 1;
         break;
       } else {
-        upper += ROOT_STEP;
+        upper += pow(ROOT_GEOM, (double)i) * ROOT_STEP;
       }
     }
     if (!root_success) {
@@ -130,7 +131,7 @@ PyObject *eigenvalues_energy(
     root_success = 0;
     for (int i = 0; i < ROOT_MAX_ITERATIONS; i ++) {
       v_upper = INT_SHORTHAND(upper);
-      midpoint = lower + (upper-lower) / 2l;
+      midpoint = (upper+lower) / 2l;
       // Adjust bounds
       if (INT_SHORTHAND(midpoint) * v_upper <= 0l) {
         // The zero is between MID <-> UPPER
@@ -142,7 +143,7 @@ PyObject *eigenvalues_energy(
       // Test if we reached the desired accuracy
       if (upper - lower < ROOT_ACCURACY) {
         root_success = 1;
-        energy_res = lower + (upper-lower) / 2l;
+        energy_res = (upper+lower) / 2l;
       }
     }
     if (!root_success || energy_res < BRACKET_THRESHOLD) {
