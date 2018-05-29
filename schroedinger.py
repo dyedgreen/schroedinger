@@ -29,10 +29,10 @@ names.append("Electron in 14eV Square Well")
 
 # Slanted potential well
 def potQHM(x):
-    return 14. * units.e * units.e * (x/2e-10)**2
+    return 100 * (x+2e-10)**2 / 2
 pot.append(potQHM)
 mass.append(units.me)
-n.append(3)
+n.append(5)
 names.append("Electron in Quantum Harmonic Oscillator")
 
 # Slanted potential well
