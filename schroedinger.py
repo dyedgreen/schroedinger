@@ -36,14 +36,32 @@ n.append(5)
 names.append("Electron in Quantum Harmonic Oscillator")
 
 # Slanted potential well
+def potTrigWell(x):
+    if x > -5e-10 and x < -1e-10:
+        return 14. * units.e * (x + 5e-10) / 4e-10
+    return 14. * units.e
+pot.append(potTrigWell)
+mass.append(units.me)
+n.append(2)
+names.append("Electron in Triangle 14eV Well")
+
+# Slanted potential well
 def potSlantedWell(x):
     if x > -5e-10 and x < -1e-10:
-        return 14. * units.e * (x - 5e-10) / 4e-10
+        return 1. * units.e * (x + 5e-10) / 4e-10
     return 14. * units.e
 pot.append(potSlantedWell)
 mass.append(units.me)
-n.append(1)
+n.append(3)
 names.append("Electron in Slanted 14eV Well")
+
+# Anharmonic potential well
+def potQAHM(x):
+    return 100 * (x+2e-10)**2 / 2 + 1e10 * (x+2e-10)**3 + 1e10 * (x+2e-10)**4
+pot.append(potQAHM)
+mass.append(units.me)
+n.append(5)
+names.append("Electron in Quantum Anharmonic Oscillator")
 
 ########################################
 # Solve, plot and print all potentials #
