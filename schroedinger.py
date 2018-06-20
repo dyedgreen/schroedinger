@@ -27,7 +27,7 @@ mass.append(units.me)
 n.append(3)
 names.append("Electron in 14eV Square Well")
 
-# Slanted potential well
+# Harmonic oscillator potential
 def potQHM(x):
     return 100 * (x+2e-10)**2 / 2
 pot.append(potQHM)
@@ -35,7 +35,7 @@ mass.append(units.me)
 n.append(5)
 names.append("Electron in Quantum Harmonic Oscillator")
 
-# Slanted potential well
+# Triangle well
 def potTrigWell(x):
     if x > -5e-10 and x < -1e-10:
         return 14. * units.e * (x + 5e-10) / 4e-10
