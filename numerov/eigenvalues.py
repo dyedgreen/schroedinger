@@ -52,7 +52,6 @@ def energy(f, m, x_start, x_end, y_start, y_end, step_count=1000, max_iterations
   bounds = (0,0)
   i = 0
   while bounds != False and i < max_iterations:
-    print("Iteration " + str(i))
     bounds = (bounds[1], bounds[1]+1e-10)
     # Note: Think about better / more intelligent step sizes vs how many steps needed
     bounds = root.expandBrackets(f_r, bounds[0], bounds[1], 1.+1e-3, 1e-1, 1<<15)
