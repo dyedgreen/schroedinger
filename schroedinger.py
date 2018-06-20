@@ -94,6 +94,7 @@ for i in range(len(pot)):
         psi = eigenvalues.psi(pot[i], mass[i], energies[j], -l, l, 0.1, 0.1, 1000)
         plt.plot(x, psi, colors[(j) % len(colors)], label=str(units.unscaleE(energies[j], mass[i]) / units.e)[:5] + " eV")
     # Save plot
+    plt.title(names[i])
     plt.grid(True)
     plt.legend()
     plt.xlabel("meters")
