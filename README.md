@@ -7,7 +7,7 @@ computing numerical values of the energy eigenvalues that a particle can have in
 
 A simple example of using the module would look like this:
 
-```
+```Python
 from numerov import units
 import numerov_c as num
 
