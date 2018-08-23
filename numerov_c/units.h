@@ -1,5 +1,5 @@
 #pragma once
-#import <math.h>
+#include <math.h>
 
 #define UNITS_H 6.626070040e-34l   // Planck's Constant according to NIST
 #define UNITS_PI 3.14159265358979l // Circle constant

@@ -1,9 +1,9 @@
 #pragma once
 
-#import <Python.h>
-#import <math.h>
-#import "units.h"
-#import "numerov.h"
+#include <Python.h>
+#include <math.h>
+#include "units.h"
+#include "numerov.h"
 
 // Find energy eigenvalues (returns python list)
 PyObject *eigenvalues_energy(

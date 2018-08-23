@@ -1,4 +1,4 @@
-#import "eigenvalues.h"
+#include "eigenvalues.h"
 
 #define INT_SHORTHAND(E) integrate(E, f, &m, &x_start, &x_end, &y_start, &y_end, &step_count, &step_width, &norm)
 
